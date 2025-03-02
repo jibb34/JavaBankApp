@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: bank_db
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpass
+    networks:
+      - java_app
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wildfly:
+    image: quay.io/wildfly/wildfly:latest-jdk20
+    container_name: wildfly
+    restart: always
+    networks:
+      - java_app
+    ports:
+      - "8080:8080" # Application
+      - "9990:9990" # Admin console
+    volumes:
+      - ./deployments:/opt/jboss/wildfly/standalone/deployments
+      - ./configuration:/opt/jboss/wildfly/standalone/configuration
+      - ./resources/mysql:/opt/jboss/wildfly/modules/system/layers/base/com/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    networks:
+      - java_app
+    ports:
+      - 8081:80
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+
+networks:
+  java_app:
+    ipam:
+      config:
+        - subnet: "172.16.238.0/24"

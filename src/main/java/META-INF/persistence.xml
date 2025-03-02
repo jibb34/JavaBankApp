@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+
+    <persistence-unit name="JPAWebAppPU" transaction-type="JTA">
+        <!-- JPA Provider: Hibernate -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:/BankDS</jta-data-source>
+        <class>com.bankapp.model.Account</class>
+        <class>com.bankapp.model.Student</class>
+
+        <!-- Database connection settings -->
+        <properties>
+            <!-- JDBC connection -->
+
+            <!-- Hibernate dialect -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
+
+            <!-- Auto create/update tables (for dev/test) -->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+
+            <!-- Show SQL in console (for dev) -->
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+        </properties>
+    </persistence-unit>
+
+</persistence>
